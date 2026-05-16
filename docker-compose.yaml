@@ -2,17 +2,15 @@ services:
   db:
     image: postgres:15
     container_name: flask_db
-    environment:
-      POSTGRES_USER: flaskuser
-      POSTGRES_PASSWORD: flaskpass
-      POSTGRES_DB: flaskapi
+    env_file:
+      - .env
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - flask_network
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U flaskuser -d flaskapi"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
       retries: 5
