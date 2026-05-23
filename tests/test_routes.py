@@ -6,6 +6,7 @@ from app.models import User
 @pytest.fixture
 def client():
     app = create_app()
+    print(app.config['SQLALCHEMY_DATABASE_URI'])
     app.config['TESTING'] = True
     app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'poolclass': NullPool}
     with app.app_context():
