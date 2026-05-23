@@ -6,6 +6,7 @@ from app.models import User
 def client():
     app = create_app()
     app.config['TESTING'] = True
+    app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'poolclass': NullPool}
     with app.app_context():
         db.create_all()
         yield app.test_client()
