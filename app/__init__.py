@@ -6,7 +6,7 @@ from config import Config
 db = SQLAlchemy()
 migrate = Migrate()
 
-def create_apptesting=(False):
+def create_app(testing=False):
     app = Flask(__name__)
     app.config.from_object(Config)
     db.init_app(app)
