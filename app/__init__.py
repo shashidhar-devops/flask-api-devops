@@ -21,9 +21,15 @@ def create_app(testing=False):
 
     db.init_app(app)
 
-    if not testing:
-        migrate.init_app(app, db)
-
+    if testing:
+        app.config['TESTING'] = True
+        app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+            'poolclass': NullPool,
+            'connect_args': {
+                'connect_timeout': 10,
+                'options': '-c statement_timeout=5000'
+        }
+    }
     from app.routes import api
     app.register_blueprint(api)
 
