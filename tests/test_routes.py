@@ -1,27 +1,15 @@
 import pytest
 from app import create_app, db
-from app.models import User
-from sqlalchemy.pool import NullPool
-
 
 @pytest.fixture
 def client():
-    # Force minimal configuration
     app = create_app(testing=True)
-    app.config.update({
-        "TESTING": True,
-        "SQLALCHEMY_DATABASE_URI": "sqlite:///:memory:",
-        "SQLALCHEMY_TRACK_MODIFICATIONS": False
-    })
 
     with app.app_context():
         db.create_all()
-
-    with app.test_client() as client:
-        yield client
-
-    with app.app_context():
+        yield app.test_client()
         db.drop_all()
+
 def test_create_user(client):
     response = client.post('/users', json={
         'username': 'testuser',
