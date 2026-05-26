@@ -75,7 +75,7 @@ jobs:
           POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
           POSTGRES_HOST: localhost
           POSTGRES_PORT: 5432
-          run: pytest tests/ -v
+        run: pytest tests/ -v
 
       - name: Log in to DockerHub
         uses: docker/login-action@v3
