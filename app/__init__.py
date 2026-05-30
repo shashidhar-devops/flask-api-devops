@@ -20,6 +20,8 @@ def create_app(testing=False):
         }
 
     db.init_app(app)
+    from app.routes import api   # ← models imported here via routes
+    app.register_blueprint(api)
     with app.app_context():
         db.create_all()
 
@@ -32,7 +34,4 @@ def create_app(testing=False):
                 'options': '-c statement_timeout=5000'
         }
     }
-    from app.routes import api
-    app.register_blueprint(api)
-
     return app
