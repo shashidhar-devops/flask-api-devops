@@ -11,7 +11,7 @@ migrate = Migrate()
 def create_app(testing=False):
     app = Flask(__name__)
     app.config.from_object(Config)
-    metrics = PrometheusMetrics(app
+    metrics = PrometheusMetrics(app)
 
     if testing:
         app.config['TESTING'] = True
