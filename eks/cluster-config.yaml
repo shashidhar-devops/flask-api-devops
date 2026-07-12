@@ -1,0 +1,19 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+     name: flask-api-cluster
+     region: us-east-1
+     version: "1.31"
+availabilityZones: ["us-east-1a","us-east-1b","us-east-1c"]
+managedNodeGroups:
+    - name: flask-api-nodes
+      instanceType: t3.medium
+      desiredCapacity: 2
+      minSize: 1
+      maxSize: 3
+      volumeSize: 20
+      ssh:
+          allow: true
+          publicKeyName: flask-api-us
+      privateNetworking: true

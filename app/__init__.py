@@ -3,14 +3,15 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from config import Config
 from sqlalchemy.pool import NullPool
+from prometheus_flask_exporter import PrometheusMetrics
 
 db = SQLAlchemy()
 migrate = Migrate()
 
 def create_app(testing=False):
     app = Flask(__name__)
-
     app.config.from_object(Config)
+    metrics = PrometheusMetrics(app
 
     if testing:
         app.config['TESTING'] = True

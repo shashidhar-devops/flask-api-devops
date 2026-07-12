@@ -4,10 +4,7 @@ metadata:
   name: db-claim
   namespace: flask-app
 spec:
-  selector:
-    matchLabels:
-      app: db
-  storageClassName: ""
+  storageClassName: ebs-sc
   accessModes:
     - ReadWriteOnce
   resources:
