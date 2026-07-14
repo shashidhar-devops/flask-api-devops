@@ -3,10 +3,17 @@ kind: Service
 metadata:
   namespace: flask-app
   name: db
+  labels:
+    app: db
 spec:
   selector:
     app: db
   ports:
-    - protocol: TCP
+    - name: postgres
+      protocol: TCP
       port: 5432
       targetPort: 5432
+    - name: metrics
+      protocol: TCP
+      port: 9187
+      targetPort: 9187
