@@ -17,7 +17,10 @@ def create_app(testing=False):
         app.config['TESTING'] = True
         app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
             'poolclass': NullPool,
-            'connect_args': {'connect_timeout': 10}
+            'connect_args': {
+                'connect_timeout': 10,
+                'options': '-c statement_timeout=5000'
+            }
         }
 
     db.init_app(app)
@@ -26,13 +29,4 @@ def create_app(testing=False):
     with app.app_context():
         db.create_all()
 
-    if testing:
-        app.config['TESTING'] = True
-        app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
-            'poolclass': NullPool,
-            'connect_args': {
-                'connect_timeout': 10,
-                'options': '-c statement_timeout=5000'
-        }
-    }
     return app
