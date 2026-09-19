@@ -1,0 +1,33 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: cluster-autoscaler-network-policy
+  namespace: kube-system
+spec:
+  podSelector:
+    # UNVERIFIED: assumes the standard Helm chart label for cluster-autoscaler.
+    # Confirm with: kubectl get pods -n kube-system --show-labels | grep autoscaler
+    matchLabels:
+      app.kubernetes.io/name: aws-cluster-autoscaler
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        # Same pragmatic ipBlock tradeoff as ArgoCD's egress to the API server.
+        - ipBlock:
+            cidr: 0.0.0.0/0
+      ports:
+        - protocol: TCP
+          port: 443
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53

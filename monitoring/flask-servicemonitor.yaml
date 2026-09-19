@@ -8,9 +8,9 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: flask
+      app: flask-metrics
   endpoints:
-    - port: http
+    - port: metrics
       path: /metrics
       interval: 15s
   namespaceSelector:

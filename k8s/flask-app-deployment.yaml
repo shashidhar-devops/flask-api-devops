@@ -12,33 +12,70 @@ spec:
       labels:
         app: flask
     spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: flask
       initContainers:
         - name: db-check
           image: postgres:15
+          securityContext:
+            runAsUser: 999
+            runAsGroup: 999
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
           env:
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
                   name: postgres-db-secret
                   key:  POSTGRES_USER
-            - name: POSTGRES_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-db-secret
-                  key:  POSTGRES_PASSWORD
             - name: POSTGRES_DB
               valueFrom:
                 configMapKeyRef:
                   name: flask-api-db
                   key: POSTGRES_DB
-          command: ["sh", "-c", "until pg_isready -U $POSTGRES_USER -h db; do echo waiting; sleep 2; done"]
-      
+          command:
+            - sh
+            - -c
+            - |
+              count=0
+              max_count=30
+              until pg_isready -U $POSTGRES_USER -h db || [ $count -ge $max_count ]; do
+                echo waiting
+                sleep 2
+                count=$((count+1))
+              done
+              if [ $count -ge $max_count ]; then
+                echo "Postgres not ready after $max_count attempts, giving up"
+                exit 1
+              fi 
       containers:
         - name: flask-web-app
           image: shashiuh/flask-api-devops:latest
           imagePullPolicy: Always
+          securityContext:
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
           ports:
             - containerPort: 5000
+              name: flask-app
+            - name: metrics
+              containerPort: 9100
           resources:
             requests:
               memory: "64Mi"

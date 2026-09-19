@@ -13,6 +13,13 @@ spec:
       labels:
         app: db
     spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 999
+        runAsGroup: 999
+        seccompProfile:
+          type: RuntimeDefault
       volumes:
         - name: postgres-db-pvc
           persistentVolumeClaim:
@@ -20,6 +27,14 @@ spec:
       containers:
         - name: postgres-db
           image: postgres:15
+          args:
+            - "-c"
+            - "unix_socket_directories=/var/lib/postgresql/data"
+          securityContext:
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
           resources:
             requests:
               cpu: 50m
@@ -67,6 +82,13 @@ spec:
 
         - name: postgres-exporter
           image: prometheuscommunity/postgres-exporter:v0.15.0
+          securityContext:
+            runAsUser: 65534
+            runAsGroup: 65534
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
           env:
             - name: POSTGRES_USER
               valueFrom:
