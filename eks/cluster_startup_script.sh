@@ -41,7 +41,9 @@ eksctl create iamserviceaccount \
 helm repo add autoscaler https://kubernetes.github.io/autoscaler
 helm repo update
 helm install cluster-autoscaler autoscaler/cluster-autoscaler \
+  --version 9.59.0 \
   --namespace kube-system \
+  --set image.tag=v1.35.0 \
   --set autoDiscovery.clusterName="$CLUSTER" \
   --set awsRegion="$REGION" \
   --set rbac.serviceAccount.create=false \

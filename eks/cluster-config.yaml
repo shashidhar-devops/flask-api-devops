@@ -1,10 +1,11 @@
 apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
-
+secretsEncryption:
+     keyARN: "arn:aws:kms:us-east-1:253264393553:key/20d19dc1-882d-4603-8b63-bec8c85079a1"   
 metadata:
      name: flask-api-cluster
      region: us-east-1
-     version: "1.31"
+     version: "1.35"
 availabilityZones: ["us-east-1a","us-east-1b","us-east-1c"]
 managedNodeGroups:
     - name: flask-api-nodes
