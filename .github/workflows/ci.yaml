@@ -2,10 +2,21 @@ name: flask-api CI pipeline
 
 permissions:
   contents: write
+
 on:
   push:
     branches:
       - master
+    paths:
+      - app/**
+      - config.py
+      - run.py
+      - Dockerfile
+      - requirements.txt
+      - tests/**
+      - pytest.ini
+      - .github/workflows/ci.yaml
+
 jobs:
   build-test-push:
     runs-on: ubuntu-latest

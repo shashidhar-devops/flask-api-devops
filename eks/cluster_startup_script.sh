@@ -68,7 +68,7 @@ eksctl create iamserviceaccount \
 eksctl create addon \
   --cluster "$CLUSTER" \
   --name aws-ebs-csi-driver \
-  --version latest \
+  --version v1.66.0-eksbuild.1 \
   --service-account-role-arn "arn:aws:iam::${ACCOUNT}:role/${EBS_ROLE}" \
   --region "$REGION" \
   --force
@@ -110,9 +110,14 @@ if [ -z "${POSTGRES_PASSWORD:-}" ]; then
   exit 1
 fi
 
+if [ -z "${POSTGRES_USER:-}" ]; then
+  echo "ERROR: POSTGRES_USER not set. Run 'source .env' before this script."
+  exit 1
+fi
+
 kubectl create secret generic postgres-db-secret \
-  --namespace flask-app --dry-run=client \
-  --from-literal=POSTGRES_USER=flaskuser \
+  --namespace flask-app \
+  --from-literal=POSTGRES_USER="$POSTGRES_USER" \
   --from-literal=POSTGRES_PASSWORD="$POSTGRES_PASSWORD" \
   --dry-run=client -o yaml | kubeseal --cert pub-cert.pem --format yaml > k8s/secret.yaml
 
