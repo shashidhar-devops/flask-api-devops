@@ -89,6 +89,7 @@ kubectl -n kube-system rollout status deployment/ebs-csi-controller --timeout=18
 helm repo add sealed-secrets https://bitnami.github.io/sealed-secrets
 helm repo update
 helm install sealed-secrets -n kube-system \
+  --version 2.20.0 \
   --set-string fullnameOverride=sealed-secrets-controller \
   sealed-secrets/sealed-secrets
 
@@ -152,6 +153,7 @@ kubectl create secret generic grafana-admin-secret \
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
 helm install prometheus prometheus-community/kube-prometheus-stack \
+  --version 91.7.0 \
   --namespace monitoring \
   --values monitoring/values.yaml
 
@@ -176,9 +178,21 @@ eksctl create iamserviceaccount \
 helm repo add grafana-community https://grafana-community.github.io/helm-charts
 helm repo update
 helm install loki grafana-community/loki \
+  --version 18.13.5 \
   --namespace logging \
-  -f loki-values.yaml
+  -f logging/values.yml
 
+#==============================================================
+
+#Install alloy 
+
+helm repo add grafana https://grafana.github.io/helm-charts
+helm repo update
+helm install alloy grafana/alloy \
+  --version 1.13.0 \
+  --namespace logging \
+  -f logging/alloy-values.yaml
+ 
 # ============================================================
 # 7. Verify (|| true throughout — these are diagnostic checks,
 #    not critical steps; a zero-match grep or unready Metrics
