@@ -8,8 +8,8 @@ EBS_ROLE="AmazonEKS_EBS_CSI_DriverRole"
 
 # ============================================================
 # 1. Create cluster
-# ============================================================
-eksctl create cluster -f cluster-config.yaml
+# ==========================================================
+eksctl create cluster -f eks/cluster-config.yaml
 
 # ============================================================
 # 1b. Enable prefix delegation on VPC CNI BEFORE anything else
@@ -47,7 +47,8 @@ helm install cluster-autoscaler autoscaler/cluster-autoscaler \
   --set autoDiscovery.clusterName="$CLUSTER" \
   --set awsRegion="$REGION" \
   --set rbac.serviceAccount.create=false \
-  --set rbac.serviceAccount.name=cluster-autoscaler
+  --set rbac.serviceAccount.name=cluster-autoscaler \
+  --set fullnameOverride=cluster-autoscaler
 
 kubectl -n kube-system rollout status deployment/cluster-autoscaler --timeout=120s
 

@@ -5,8 +5,6 @@ metadata:
   namespace: kube-system
 spec:
   podSelector:
-    # UNVERIFIED: assumes the standard Helm chart label for cluster-autoscaler.
-    # Confirm with: kubectl get pods -n kube-system --show-labels | grep autoscaler
     matchLabels:
       app.kubernetes.io/name: aws-cluster-autoscaler
   policyTypes:
