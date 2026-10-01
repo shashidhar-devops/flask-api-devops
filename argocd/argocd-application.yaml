@@ -4,7 +4,7 @@ metadata:
   name: flask-api
   namespace: argocd
 spec:
-  project: default
+  project: flask-api
   source:
     repoURL: https://github.com/shashidhar-devops/flask-api-devops.git
     targetRevision: master

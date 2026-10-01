@@ -3,6 +3,8 @@ kind: PersistentVolumeClaim
 metadata:
   name: db-claim
   namespace: flask-app
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false
 spec:
   storageClassName: ebs-sc
   accessModes:

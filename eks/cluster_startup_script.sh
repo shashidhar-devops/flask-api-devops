@@ -86,7 +86,7 @@ eksctl create addon \
   --version v1.66.0-eksbuild.1 \
   --service-account-role-arn "arn:aws:iam::${ACCOUNT}:role/${EBS_ROLE}" \
   --region "$REGION" \
-  --force
+  --wait
 
 kubectl -n kube-system rollout status deployment/ebs-csi-controller --timeout=180s
 
@@ -139,7 +139,7 @@ kubectl apply -n argocd --server-side --force-conflicts \
   -f "https://raw.githubusercontent.com/argoproj/argo-cd/${ARGOCD_VERSION}/manifests/install.yaml"
 kubectl -n argocd rollout status deployment/argocd-server --timeout=180s
 
-kubectl apply -f argocd/rbac-argocd.yaml
+kubectl apply -f argocd/appproject-flask-api.yaml
 kubectl apply -f argocd/network-policy-argocd.yaml
 kubectl apply -f argocd/argocd-application.yaml
 

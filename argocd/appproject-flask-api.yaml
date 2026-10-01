@@ -1,0 +1,34 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: flask-api
+  namespace: argocd
+spec:
+  description: Flask API application — restricted to its own repo and namespace
+  sourceRepos:
+    - https://github.com/shashidhar-devops/flask-api-devops.git
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: flask-app
+  clusterResourceWhitelist:
+    - group: ""
+      kind: Namespace
+    - group: storage.k8s.io
+      kind: StorageClass
+  namespaceResourceWhitelist:
+    - group: ""
+      kind: Service
+    - group: ""
+      kind: ConfigMap
+    - group: ""
+      kind: PersistentVolumeClaim
+    - group: ""
+      kind: ResourceQuota
+    - group: apps
+      kind: Deployment
+    - group: autoscaling
+      kind: HorizontalPodAutoscaler
+    - group: networking.k8s.io
+      kind: NetworkPolicy
+    - group: bitnami.com
+      kind: SealedSecret
