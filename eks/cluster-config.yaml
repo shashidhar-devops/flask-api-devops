@@ -1,20 +1,41 @@
 apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
-secretsEncryption:
-     keyARN: "arn:aws:kms:us-east-1:253264393553:key/20d19dc1-882d-4603-8b63-bec8c85079a1"   
+
 metadata:
-     name: flask-api-cluster
-     region: us-east-1
-     version: "1.35"
-availabilityZones: ["us-east-1a","us-east-1b","us-east-1c"]
+  name: flask-api-cluster
+  region: us-east-1
+  version: "1.35"
+
+# Encrypt Kubernetes Secrets at rest in etcd with a customer-managed KMS key.
+# The key (alias/flask-api-eks-secrets) is reused across rebuilds — never
+# delete it while a cluster is using it.
+secretsEncryption:
+  keyARN: "arn:aws:kms:us-east-1:253264393553:key/20d19dc1-882d-4603-8b63-bec8c85079a1"
+
+availabilityZones: ["us-east-1a", "us-east-1b", "us-east-1c"]
+
+# VPC CNI as a pinned, managed EKS addon.
+# - enableNetworkPolicy: turns on NetworkPolicy enforcement (network policy
+#   agent in every aws-node Pod, eBPF-based). Without this, every
+#   NetworkPolicy in the project is accepted but silently ignored.
+# - ENABLE_PREFIX_DELEGATION: each ENI slot holds a /28 prefix instead of a
+#   single IP, raising the per-node Pod limit on t3.medium. Set here (not via
+#   `kubectl set env`) so addon updates don't overwrite it.
+addons:
+  - name: vpc-cni
+    version: v1.23.1-eksbuild.1
+    configurationValues: '{"enableNetworkPolicy": "true", "env": {"ENABLE_PREFIX_DELEGATION": "true"}}'
+
 managedNodeGroups:
-    - name: flask-api-nodes
-      instanceType: t3.medium
-      desiredCapacity: 2
-      minSize: 1
-      maxSize: 3
-      volumeSize: 20
-      ssh:
-          allow: true
-          publicKeyName: flask-api-us
-      privateNetworking: true
+  - name: flask-api-nodes
+    instanceType: t3.medium
+    desiredCapacity: 2
+    minSize: 1
+    maxSize: 3
+    volumeSize: 20
+    privateNetworking: true
+    # Known gap: SSH access to nodes. Production practice is SSM Session
+    # Manager instead of SSH. Revisit during the Terraform layer.
+    ssh:
+      allow: true
+      publicKeyName: flask-api-us
