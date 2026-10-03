@@ -25,12 +25,11 @@ spec:
         - name: postgres-db-pvc
           persistentVolumeClaim:
             claimName: db-claim
+        - name: postgres-run
+          emptyDir: {}
       containers:
         - name: postgres-db
           image: postgres:15
-          args:
-            - "-c"
-            - "unix_socket_directories=/var/lib/postgresql/data/db_data"
           securityContext:
             readOnlyRootFilesystem: true
             allowPrivilegeEscalation: false
@@ -48,6 +47,8 @@ spec:
           volumeMounts:
             - name: postgres-db-pvc
               mountPath: "/var/lib/postgresql/data/"
+            - name: postgres-run
+              mountPath: /var/run/postgresql
           env:
             - name: PGDATA
               value: /var/lib/postgresql/data/db_data
