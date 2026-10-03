@@ -30,7 +30,7 @@ spec:
           image: postgres:15
           args:
             - "-c"
-            - "unix_socket_directories=/var/lib/postgresql/data"
+            - "unix_socket_directories=/var/lib/postgresql/data/db_data"
           securityContext:
             readOnlyRootFilesystem: true
             allowPrivilegeEscalation: false
