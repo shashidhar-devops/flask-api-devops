@@ -61,7 +61,14 @@ spec:
               if [ $count -ge $max_count ]; then
                 echo "Postgres not ready after $max_count attempts, giving up"
                 exit 1
-              fi 
+              fi
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              cpu: 100m
+              memory: 64Mi  
       containers:
         - name: flask-web-app
           image: shashiuh/flask-api-devops:latest
