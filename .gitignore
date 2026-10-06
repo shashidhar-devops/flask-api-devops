@@ -5,3 +5,4 @@ __pycache__/
 .DS_Store
 pub-cert.pem
 eks/cluster_setup.sh
+monitoring/secret.yaml
