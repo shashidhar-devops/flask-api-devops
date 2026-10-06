@@ -74,7 +74,7 @@ spec:
               memory: 64Mi  
       containers:
         - name: flask-web-app
-          image: shashiuh/flask-api-devops:latest
+          image: shashiuh/flask-api-devops:86583d2dbb7c8ca4ad1f9f5e81a48b67f79a38c0
           imagePullPolicy: Always
           securityContext:
             readOnlyRootFilesystem: true
