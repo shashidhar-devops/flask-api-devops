@@ -11,6 +11,7 @@ WORKDIR /app
 ENV PYTHONDONTWRITEBYTECODE=1
 RUN useradd -u 1000 --create-home --shell /bin/bash appuser && chown appuser:appuser /app
 COPY --from=builder /install /usr/local
+RUN pip uninstall -y setuptools wheel
 COPY --chown=appuser:appuser . .
 USER appuser
 EXPOSE 5000
