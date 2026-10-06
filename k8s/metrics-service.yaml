@@ -10,5 +10,6 @@ spec:
   selector:
     app: flask
   ports:
-    - port: 9100
+    - name: metrics
+      port: 9100
       targetPort: metrics
