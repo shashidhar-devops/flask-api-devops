@@ -11,9 +11,9 @@ migrate = Migrate()
 def create_app(testing=False):
     app = Flask(__name__)
     app.config.from_object(Config)
-    metrics = PrometheusMetrics(app)
+    metrics = PrometheusMetrics(app, path=None)
     if not testing:
-      metrics.start_http_server(9100)
+        metrics.start_http_server(9100)
 
     if testing:
         app.config['TESTING'] = True
