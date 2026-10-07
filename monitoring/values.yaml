@@ -25,11 +25,11 @@ grafana:
     type: LoadBalancer
   resources:
     requests:
-      cpu: 50m
-      memory: 100Mi
+      cpu: 100m
+      memory: 256Mi
     limits:
-      cpu: 200m
-      memory: 200Mi
+      cpu: 500m
+      memory: 512Mi
 alertmanager:
   alertmanagerSpec:
     resources:
