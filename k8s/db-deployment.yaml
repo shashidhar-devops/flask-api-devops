@@ -71,7 +71,7 @@ spec:
                   key: POSTGRES_DB
           livenessProbe:
             exec:
-              command: ["pg_isready", "-h", "localhost"]
+              command: ["sh", "-c", 'pg_isready -h localhost -U "$POSTGRES_USER" -d "$POSTGRES_DB"']
             initialDelaySeconds: 15
             periodSeconds: 10
             timeoutSeconds: 2
@@ -79,7 +79,7 @@ spec:
             failureThreshold: 3
           readinessProbe:
             exec:
-              command: ["pg_isready", "-h", "localhost"]
+              command: ["sh", "-c", 'pg_isready -h localhost -U "$POSTGRES_USER" -d "$POSTGRES_DB"']
             initialDelaySeconds: 5
             periodSeconds: 5
             timeoutSeconds: 2
