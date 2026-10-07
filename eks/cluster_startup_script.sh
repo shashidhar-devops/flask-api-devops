@@ -88,6 +88,8 @@ eksctl create addon \
   --region "$REGION" \
   --wait
 
+kubectl wait --for=create deployment/ebs-csi-controller -n kube-system --timeout=300s
+
 kubectl -n kube-system rollout status deployment/ebs-csi-controller --timeout=180s
 
 # ============================================================
