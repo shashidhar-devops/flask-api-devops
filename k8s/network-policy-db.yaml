@@ -19,8 +19,7 @@ spec:
         - protocol: TCP
           port: 5432
     - from:
-        # UNVERIFIED: assumes kube-prometheus-stack's default Prometheus Pod label.
-        # Confirm with: kubectl get pods -n monitoring --show-labels | grep prometheus
+        # Verified: Prometheus in "monitoring" scrapes the exporter on 9187 through this rule (target is up).
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: monitoring

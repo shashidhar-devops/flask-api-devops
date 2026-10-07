@@ -18,7 +18,7 @@ spec:
         - protocol: TCP
           port: 5000
     - from:
-        # UNVERIFIED: same Prometheus Pod label assumption as db-network-policy.
+        # Verified: Prometheus in "monitoring" scrapes the Flask metrics on 9100 through this rule (target is up).
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: monitoring
